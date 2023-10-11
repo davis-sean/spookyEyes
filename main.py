@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import random
+import threading
 import time
 
 def main():
@@ -8,21 +9,22 @@ def main():
     eyes_quantity = 20
     eyes = []
 
-    blink_frequency = 10 / eyes_quantity
-
     for i in range(eyes_quantity):
         eyes.append(Eye(i, True))
 
-    for i in eyes:
-        print(f"id: {i.id}  on: {i.on}")
+    # for i in eyes:
+    #     print(f"id: {i.id}  on: {i.on}")
+    # print()
 
     while True:
         random_eye = random.choice(eyes)
         if random_eye.on == True:
-            random_eye.blink()
-            print(f"id: {random_eye.id}  blink")
-            time.sleep(random.uniform(0.0, blink_frequency))
-        
+            if random.random() > 0.1:  # Chance of hiding
+                random_eye.blink()
+            else:
+                hide_eye = threading.Thread(target=random_eye.hide)
+                hide_eye.start()
+        time.sleep(random.uniform(0.0, 3.0))  # Min and max possible time between blinks
 
 
 def light_on():
@@ -43,20 +45,23 @@ class Eye:
 
     # Turn off for fraction of a second
     def blink(self):
-        light_off()
+        print(f"id {self.id}  blink")
         self.on = False
-        time.sleep(0.2)
-        light_on()
+        light_off()
+        time.sleep(0.2)  # Duration of blink
         self.on = True
+        light_on()
         
 
     # Turn off for several seconds
     def hide(self):
-        light_off()
+        print(f"id: {self.id}  hide start")
         self.on = False
-        # sleep for some amount of time
-        light_on()
+        light_off()
+        time.sleep(random.uniform(10.0, 30.0))  # Min and max possible duration of hide
+        print(f"id: {self.id}  hide end")
         self.on = True
+        light_on()
 
 
 main()
