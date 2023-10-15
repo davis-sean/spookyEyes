@@ -1,67 +1,62 @@
 #!/usr/bin/python3
 
 import random
-import threading
 import time
+from machine import Pin
+
+statusled = Pin("LED", Pin.OUT)
+
+led0 = Pin(0,Pin.OUT)
+led1 = Pin(1,Pin.OUT)
+led2 = Pin(2,Pin.OUT)
+led3 = Pin(3,Pin.OUT)
+
+statusled.value(0)
+led0.value(0)
+led1.value(0)
+led2.value(0)
+led3.value(0)
 
 def main():
 
-    eyes_quantity = 20
-    eyes = []
-
-    for i in range(eyes_quantity):
-        eyes.append(Eye(i, True))
-
-    # for i in eyes:
-    #     print(f"id: {i.id}  on: {i.on}")
-    # print()
-
     while True:
-        random_eye = random.choice(eyes)
-        if random_eye.on == True:
-            if random.random() > 0.1:  # Chance of hiding
-                random_eye.blink()
-            else:
-                hide_eye = threading.Thread(target=random_eye.hide)
-                hide_eye.start()
+        statusled.value(1)
+        random_eye = random.randint(0, 3)  # Number of eyes
+        blink(random_eye)
         time.sleep(random.uniform(0.0, 3.0))  # Min and max possible time between blinks
 
 
-def light_on():
+def blink(id):
+    print(f"id: {id}  blink")
+    light_off(id)
+    time.sleep(0.2)  # Duration of blink
+    light_on(id)
+
+
+def light_on(id):
     # Use GPIO to turn light on
+    if (id == 0):
+        led0.value(1)
+    elif (id == 1):
+        led1.value(1)
+    elif (id == 2):
+        led2.value(1)
+    elif (id == 3):
+        led3.value(1)
     pass
 
 
-def light_off():
+def light_off(id):
     # Use GPIO to turn light off
+    if (id == 0):
+        led0.value(0)
+    elif (id == 1):
+        led1.value(0)
+    elif (id == 2):
+        led2.value(0)
+    elif (id == 3):
+        led3.value(0)
     pass
-
-
-class Eye:
-
-    def __init__(self, eye_id, light_on):
-        self.id = eye_id
-        self.on = light_on
-
-    # Turn off for fraction of a second
-    def blink(self):
-        print(f"id {self.id}  blink")
-        self.on = False
-        light_off()
-        time.sleep(0.2)  # Duration of blink
-        self.on = True
-        light_on()
-        
-
-    # Turn off for several seconds
-    def hide(self):
-        print(f"id: {self.id}  hide start")
-        self.on = False
-        light_off()
-        time.sleep(random.uniform(10.0, 30.0))  # Min and max possible duration of hide
-        print(f"id: {self.id}  hide end")
-        self.on = True
-        light_on()
 
 
 main()
