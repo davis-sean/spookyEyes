@@ -19,7 +19,7 @@ def main():
         random_eye = random.choice(eyes)
 
         if random_eye.on == True:
-            if random.random() < 0.4:  # hide start chance
+            if random.random() < 0.2:  # hide start chance
                 random_eye.light_off()
             else:
                 random_eye.blink()
