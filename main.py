@@ -14,6 +14,18 @@ def main():
     for i in range(eyes_quantity-1):
         eyes.append(Eye(i, True))
 
+   # init
+    for i in eyes:
+        i.light_on()
+    time.sleep(5)
+    for i in eyes:
+        i.light_off()
+    for n in range(4):
+        for i in eyes:
+            i.light_on()
+            time.sleep(0.1)
+            i.light_off()
+
     while True:
 
         random_eye = random.choice(eyes)
