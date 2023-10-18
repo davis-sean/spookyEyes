@@ -8,7 +8,7 @@ def main():
 
     Pin("LED", Pin.OUT).value(1)
 
-    eyes_quantity = 8
+    eyes_quantity = 9
     eyes = []
 
     for i in range(eyes_quantity-1):
